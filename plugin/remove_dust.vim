@@ -49,8 +49,14 @@ function! s:remove_dust() "{{{
   unlet cursor
 endfunction "}}}
 
+function! s:remove_dust_force()
+  RemoveDustEnable
+  RemoveDust
+endfunction
+
 command! RemoveDustEnable  let b:remove_dust_enable=1
 command! RemoveDustDisable let b:remove_dust_enable=0
+command! RemoveDustForce call <SID>remove_dust_force()
 command! RemoveDust call <SID>remove_dust()
 
 augroup RemoveDust
