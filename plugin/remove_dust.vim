@@ -31,22 +31,21 @@ let g:loaded_alpaca_remove_dust = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
-let g:remove_dust_enable = get(g:, "remove_dust_enable", 0)
+let g:remove_dust_enable = get(g:, 'remove_dust_enable', 0)
 
 function! s:remove_dust() "{{{
-  if get(b:, "remove_dust_enable", 0) == 0
+  if get(b:, 'remove_dust_enable', g:remove_dust_enable) == 0
     return -1
   endif
 
-  let cursor = getpos(".")
+  let cursor = getpos('.')
 
-  let space_length = &ts > 0 ? &ts : 2
-  let afford_space  = "                                               "
+  let space_length = &tabstop > 0 ? &tabstop : 2
+  let afford_space  = '                                               '
 
   %s/\s\+$//ge
-  exec "%s/\t/".afford_space[0:space_length - 1]."/ge"
+  execute '%s/\t/' . afford_space[0:space_length - 1] . '/ge'
   call setpos(".", cursor)
-  unlet cursor
 endfunction "}}}
 
 function! s:remove_dust_force()
@@ -54,17 +53,15 @@ function! s:remove_dust_force()
   RemoveDust
 endfunction
 
-command! RemoveDustEnable  let b:remove_dust_enable=1
-command! RemoveDustDisable let b:remove_dust_enable=0
+command! RemoveDustEnable  let b:remove_dust_enable = 1
+command! RemoveDustDisable let b:remove_dust_enable = 0
 command! RemoveDustForce call <SID>remove_dust_force()
 command! RemoveDust call <SID>remove_dust()
 
 augroup RemoveDust
-  au!
-  au BufWritePre * call <SID>remove_dust()
-  au BufNewFile,BufRead * let b:remove_dust_enable = g:remove_dust_enable
+  autocmd!
+  autocmd BufWritePre * call <SID>remove_dust()
 augroup END
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
-
